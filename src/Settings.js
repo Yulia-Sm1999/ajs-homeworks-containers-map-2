@@ -1,30 +1,38 @@
 export default class Settings {
-  constructor(setting) {
-    this.getSettings(setting);
+  constructor(settings) {
+    this.defaultSettings = new Map([['theme', 'dark'], ['music', 'trance'], ['difficulty', 'easy']]);
+    this.newSettings = settings;
   }
 
-  getSettings(setting) {
-    this.defaultSettings = new Map();
-    this.defaultSettings.set('theme', 'dark');
-    this.defaultSettings.set('music', 'trance');
-    this.defaultSettings.set('difficulty', 'easy');
+  setUserSettings() {
+    const userSettings = new Map();
+    this.newSettings.forEach((array) => userSettings.set(array[0], array[1]));
+    return userSettings;
+  }
 
-    if (setting === undefined) {
+  get settings() {
+    this.commonSettings = new Map();
+
+    if (this.newSettings === undefined) {
       return this.defaultSettings;
     }
+    const userSettings = this.setUserSettings();
 
-    this.userSettings = new Map();
-    this.userSettings.set(...setting);
+    /* eslint-disable-next-line */
+    for (const [key, value] of this.defaultSettings) {
+      if (userSettings.has(key)) {
+        this.commonSettings.set(key, userSettings.get(key));
+      }
+      if (!userSettings.has(key)) {
+        this.commonSettings.set(key, value);
+      }
+    }
 
-    this.allSettings = new Map();
-
-    this.defaultSettings.forEach((elem) => {
-      if (this.userSettings.has(elem)) {
-        this.allSettings.set(elem, this.userSettings.get(elem));
-      } else {
-        this.allSettings.set(elem, this.defaultSettings.get(elem));
+    userSettings.forEach((value, key) => {
+      if (!this.defaultSettings.has(key)) {
+        this.commonSettings.set(key, value);
       }
     });
-    return this.allSettings;
+    return this.commonSettings;
   }
 }
