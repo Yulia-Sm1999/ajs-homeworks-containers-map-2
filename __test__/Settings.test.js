@@ -7,9 +7,18 @@ test('should show default settings', () => {
   expect(result.settings).toEqual(expectedSettings);
 });
 
+test('should show default and user setting', () => {
+  const result = new Settings();
+  result.setUserSettings([['theme', 'light']]);
+  const expectedSettings = new Map([['theme', 'light'], ['music', 'trance'], ['difficulty', 'easy']]);
+
+  expect(result.settings).toEqual(expectedSettings);
+});
+
 test('should show default and user settings', () => {
-  const result = new Settings([['theme', 'light'], ['background', 'sky']]);
-  const expectedSettings = new Map([['theme', 'light'], ['music', 'trance'], ['difficulty', 'easy'], ['background', 'sky']]);
+  const result = new Settings();
+  result.setUserSettings([['music', 'pop'], ['difficulty', 'hard']]);
+  const expectedSettings = new Map([['theme', 'dark'], ['music', 'pop'], ['difficulty', 'hard']]);
 
   expect(result.settings).toEqual(expectedSettings);
 });
